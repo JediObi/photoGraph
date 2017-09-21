@@ -1,7 +1,14 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import logo from './logo.svg';
-import './App.css';
+//import './App.css';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import MyAwesomeReactComponent from './MyAwesomeReactComponent';
 
+
+import CardOnlyMedia from './CardOnlyMedia';
+
+
+/*
 class App extends Component {
   render() {
     return (
@@ -16,6 +23,21 @@ class App extends Component {
       </div>
     );
   }
+}
+*/
+
+//把文件名转换成文件路径
+/*
+
+*/
+class App extends Component {
+    render() {
+        return (
+            <MuiThemeProvider>
+                {/*<CardOnlyMedia/>*/}
+            </MuiThemeProvider>
+        );
+    }
 }
 
 export default App;
