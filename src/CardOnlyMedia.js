@@ -106,11 +106,11 @@ class CardOnlyMedia extends Component {
             hPosRangeY = hPosRange.y,
             vPosRangeTopY = vPosRange.topY,
             vPosRangeX = vPosRange.x;
-        //从
-         let   imgsArrangeTopArr = [],
-            topImageNumber = Math.ceil(Math.random() * 2),
-            tomImgSpliceIndex = 0,
-            imgsArrangeCenterArr = imgsArrangeArr.splice()
+
+         let   imgsArrangeTopArr = [],      //上部图片的位置信息
+            topImageNumber = Math.ceil(Math.random() * 2),  //上部的图片数量，0或1
+            tomImgSpliceIndex = 0,          //上部图片的索引
+            imgsArrangeCenterArr = imgsArrangeArr.splice(); //居中图片的位置信息
     }
 
     render() {
