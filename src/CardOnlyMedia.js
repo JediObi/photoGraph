@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import ReactDOM from 'react-dom';
 import imageDatas from './imageDatas.json';
 import './CardOnlyMedia.css';
 
@@ -14,34 +15,41 @@ function genImageURL(imageDataArr) {
 let imageDataArr = genImageURL(imageDatas);
 //alert(imageDataArr[0].imageURL);
 
-const ImageFigure = (props) => {
 
-    let styleObj = {};
+class ImageFigure extends Component{
+    render(){
+        let styleObj = {};
 
-    //判断是否为空
-    if(this.props.position.pos) {
-        styleObj = this.state.position.pos;
+        //判断是否为空
+        if (this.props.position.pos) {
+            styleObj = this.props.position.pos;
+        }
+        return (
+            <figure className="img-figure" style={styleObj}>
+                <img src={this.props.data.imageURL} alt={this.props.data.title}/>
+                <figcaption>
+                    <h2 className="img-title">{this.props.data.title}</h2>
+                </figcaption>
+            </figure>
+        );
     }
-
-    return (
-        <figure className="img-figure" style={styleObj}>
-            <img src={props.data.imageURL} alt={props.data.title}/>
-            <figcaption>
-                <h2 className="img-title">{props.data.title}</h2>
-            </figcaption>
-        </figure>
-    );
 }
-
 //在指定范围内产生一个随机数
-function randomValue(value1,value2){
-    if(value2<value1){
+/* test */
+/***
+ *
+ * @param value1
+ * @param value2
+ * @returns {number}
+ */
+function randomValue(value1, value2) {
+    if (value2 < value1) {
         let temp = value1;
         value1 = value2;
         value2 = temp;
     }
 
-    return Math.ceil(Math.random()*(value2 - value1)+value1);
+    return Math.ceil(Math.random() * (value2 - value1) + value1);
 }
 
 class CardOnlyMedia extends Component {
@@ -66,19 +74,14 @@ class CardOnlyMedia extends Component {
     constructor() {
         super();
         this.state = {
-            /* imgsArrageArr:[{
-                 pos:{
-                     left: '0',
-                     top: '0'
-                 }
-             }]*/
-        }
+            imgsArrangeArr: []
+        };
     }
 
     //组件加载完后，计算组件在各版块的坐标范围
     componentDidMount() {
         //获取底面板
-        let stageDOM = React.findDOMNode(this.refs.stage);
+        let stageDOM = ReactDOM.findDOMNode(this.refs.stage);
         //获取底面板的长宽
         let stageW = stageDOM.scrollWidth,
             stageH = stageDOM.scrollHeight;
@@ -87,7 +90,7 @@ class CardOnlyMedia extends Component {
             halfStageH = Math.ceil(stageH / 2);
 
         //使用ref获取一个ImageFigure，此处是为了获取核心组件的dimension
-        let imgFigureDOM = React.findDOMNode(this.refs.imageFigure0);
+        let imgFigureDOM = ReactDOM.findDOMNode(this.refs.imgFigure0);
         //获取ImageFigure的长宽
         let imgW = imgFigureDOM.scrollWidth,
             imgH = imgFigureDOM.scrollHeight;
@@ -105,7 +108,7 @@ class CardOnlyMedia extends Component {
         this.Constant.hPosRange.leftSecX[0] = -halfImgW;
         this.Constant.hPosRange.leftSecX[1] = halfStageW - halfImgW * 3;
         //右边版块的x坐标范围
-        this.Constant.hPosRange.rightSecX[0] = stageW + halfImgW;
+        this.Constant.hPosRange.rightSecX[0] = halfStageW + halfImgW;
         this.Constant.hPosRange.rightSecX[1] = stageW - halfImgW;
         //计算水平版块的y坐标范围
         this.Constant.hPosRange.y[0] = -halfImgH;
@@ -123,7 +126,6 @@ class CardOnlyMedia extends Component {
         this.reArrange(0);
 
     }
-
 
 
     //排布图片，首先为各个版块确定图片数量和坐标，然后填入图片索引
@@ -145,43 +147,45 @@ class CardOnlyMedia extends Component {
 
         //构建对象用于接收每个版块图片的坐标值
         //center，根据函数形参取出图片作为中央图片
-        let    imgsArrangeCenterArr = imgsArrangeArr.splice(centerIndex,1); //获取居中图片的位置信息
+        let imgsArrangeCenterArr = imgsArrangeArr.splice(centerIndex, 1); //获取居中图片的位置信息
         //把中心坐标赋予中央图片，pos是只有两个键值,left,top，和this.Constant.enterPos相同
         imgsArrangeCenterArr[0].pos = centerPos;
 
         //top
-        let   imgsArrangeTopArr = [],      //上部图片的位置信息
+        let imgsArrangeTopArr = [],      //上部图片的位置信息
             topImageNumber = Math.ceil(Math.random() * 2),  //上部的图片数量，0或1
             topImgSpliceIndex = 0;          //上部图片的索引
         //判断top是否有图片，如果有，则计算坐标并随机取出一个图片填充
         //可以使用if，但是splice会剔除指定数量，剔除后，后续遍历不会重复出现
         //首先确定随机种子的位置，然后从这个位置开始splice
         //因为产生的是索引所以，随机点必须合法，但如果数量为0就无所谓了
-        topImgSpliceIndex = Math.ceil(Math.random()*(imgsArrangeArr.length-topImageNumber));
+        topImgSpliceIndex = Math.ceil(Math.random() * (imgsArrangeArr.length - topImageNumber));
         //产生了图片索引之后，取出图片坐标数组（此时坐标还没产生）
         imgsArrangeTopArr = imgsArrangeArr.splice(topImgSpliceIndex, topImageNumber);
         //遍历数组，产生坐标值
-        imgsArrangeTopArr.forEach((value,index)=>{
+        imgsArrangeTopArr.forEach((value, index) => {
             //value是pos->left,right
             //index可能是0或1
             //在top的范围内生成坐标
             //x
             //value.left = Math.ceil(Math.random()*(vPosRangeX[1]-vPosRangeX[0])+vPosRangeX[0]);
-            value.left = randomValue(vPosRangeX[0],vPosRangeX[1]);
+            value.pos.left = randomValue(vPosRangeX[0], vPosRangeX[1]);
             //y
             //value.top = Math.ceil(Math.random()*(vPosRangeTopY[1] - vPosRangeTopY[0])+vPosRangeTopY[0]);
-            value.top = randomValue(vPosRangeTopY[0],vPosRangeTopY[1]);
+            value.pos.top = randomValue(vPosRangeTopY[0], vPosRangeTopY[1]);
+            //alert("value "+value.left+", "+value.top);
         });
+        //alert(imgsArrangeTopArr[0].left + ", " + imgsArrangeTopArr[0].top);
         //left & rightl
         //为剩余的坐标数组产生坐标
-        imgsArrangeArr.forEach((value,index)=>{
+        imgsArrangeArr.forEach((value, index) => {
             //如果索引是奇数，放左边
-            if (index%2==1){
-                value.left = randomValue(hPosRangeLeftSecX[0],hPosRangeLeftSecX[1]);
-            }else{
-                value.left = randomValue(hPosRangeRightSecX[0],hPosRangeRightSecX[1]);
+            if (index % 2 === 1) {
+                value.pos.left = randomValue(hPosRangeLeftSecX[0], hPosRangeLeftSecX[1]);
+            } else {
+                value.pos.left = randomValue(hPosRangeRightSecX[0], hPosRangeRightSecX[1]);
             }
-            value.top = randomValue(hPosRangeY[0],hPosRangeY[1]);
+            value.pos.top = randomValue(hPosRangeY[0], hPosRangeY[1]);
         });
 
         //接下来把新的结果拼接回去
@@ -194,7 +198,7 @@ class CardOnlyMedia extends Component {
 
         //设置状态，重新渲染
         this.setState({
-            imgsArrangeArr: imgsArrangeArr
+            imgsArrangeArr: imgsArrangeArr,
         });
     }
 
@@ -212,10 +216,11 @@ class CardOnlyMedia extends Component {
                         left: 0,
                         top: 0
                     }
-                }
+                };
             }
             //在此处顺便传入对应索引的坐标信息，在组件的定义中，使用这个属性渲染坐标
-            imgFigures.push(<ImageFigure data={value} ref={'imgFigure' + index} position={this.state.imgsArrangeArr[index]}/>);
+            imgFigures.push(<ImageFigure key={index} data={value} ref={'imgFigure' + index}
+                                         position={this.state.imgsArrangeArr[index]}/>);
         }.bind(this));
 
         //构建新的组件，把心构建的ImageFigures数组填充进来

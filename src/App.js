@@ -4,6 +4,7 @@ import logo from './logo.svg';
 import CardOnlyMedia from './CardOnlyMedia';
 
 class App extends Component {
+
     render() {
         return (
             <CardOnlyMedia>
