@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import imageDatas from './imageDatas.json';
+import ImageFigure from './ImageFigure'
 import './CardOnlyMedia.css';
 
+//遍历json数组，把图片名拼装成url
 function genImageURL(imageDataArr) {
     for (let i = 0, j = imageDatas.length; i < j; i++) {
         let singleImageData = imageDataArr[i];
@@ -15,33 +17,7 @@ function genImageURL(imageDataArr) {
 let imageDataArr = genImageURL(imageDatas);
 //alert(imageDataArr[0].imageURL);
 
-
-class ImageFigure extends Component{
-    render(){
-        let styleObj = {};
-
-        //判断是否为空
-        if (this.props.position.pos) {
-            styleObj = this.props.position.pos;
-        }
-        return (
-            <figure className="img-figure" style={styleObj}>
-                <img src={this.props.data.imageURL} alt={this.props.data.title}/>
-                <figcaption>
-                    <h2 className="img-title">{this.props.data.title}</h2>
-                </figcaption>
-            </figure>
-        );
-    }
-}
 //在指定范围内产生一个随机数
-/* test */
-/***
- *
- * @param value1
- * @param value2
- * @returns {number}
- */
 function randomValue(value1, value2) {
     if (value2 < value1) {
         let temp = value1;
@@ -50,6 +26,13 @@ function randomValue(value1, value2) {
     }
 
     return Math.ceil(Math.random() * (value2 - value1) + value1);
+}
+
+//产生一个随机角度
+function randomAngle(maxAngle) {
+    maxAngle = maxAngle ? maxAngle : 30;
+
+    return Math.random() > 0.5 ? '' : '-' + randomValue(0, maxAngle);
 }
 
 class CardOnlyMedia extends Component {
@@ -74,8 +57,29 @@ class CardOnlyMedia extends Component {
     constructor() {
         super();
         this.state = {
-            imgsArrangeArr: []
+            imgsArrangeArr: [
+                /*
+                {
+                    pos: {
+                        left: 0,
+                        top: 0
+                    },
+                    rotate: 0,
+                    isInverse: false,
+                },
+                */
+            ],
         };
+    }
+
+    inverse(i) {
+        return function () {
+            const imgsArrangeArr = this.state.imgsArrangeArr;
+            imgsArrangeArr[i].isInverse = !imgsArrangeArr[i].isInverse;
+            this.setState({
+                imgsArrangeArr: imgsArrangeArr,
+            });
+        }.bind(this);
     }
 
     //组件加载完后，计算组件在各版块的坐标范围
@@ -103,6 +107,7 @@ class CardOnlyMedia extends Component {
             left: halfStageW - halfImgW,
             top: halfStageH - halfImgH
         };
+
         //计算水平（左右）版块图片的坐标范围this.Constant.hPosRange
         //左边版块的x坐标范围
         this.Constant.hPosRange.leftSecX[0] = -halfImgW;
@@ -150,6 +155,14 @@ class CardOnlyMedia extends Component {
         let imgsArrangeCenterArr = imgsArrangeArr.splice(centerIndex, 1); //获取居中图片的位置信息
         //把中心坐标赋予中央图片，pos是只有两个键值,left,top，和this.Constant.enterPos相同
         imgsArrangeCenterArr[0].pos = centerPos;
+        //把中央图片的旋转角度置0
+        imgsArrangeCenterArr[0].rotate = 0;
+
+        imgsArrangeCenterArr[0] = {
+            pos: centerPos,
+            rotate: 0,
+            isInverse: true,
+        }
 
         //top
         let imgsArrangeTopArr = [],      //上部图片的位置信息
@@ -168,24 +181,40 @@ class CardOnlyMedia extends Component {
             //index可能是0或1
             //在top的范围内生成坐标
             //x
-            //value.left = Math.ceil(Math.random()*(vPosRangeX[1]-vPosRangeX[0])+vPosRangeX[0]);
-            value.pos.left = randomValue(vPosRangeX[0], vPosRangeX[1]);
+            // value.pos.left = randomValue(vPosRangeX[0], vPosRangeX[1]);
             //y
-            //value.top = Math.ceil(Math.random()*(vPosRangeTopY[1] - vPosRangeTopY[0])+vPosRangeTopY[0]);
-            value.pos.top = randomValue(vPosRangeTopY[0], vPosRangeTopY[1]);
+            // value.pos.top = randomValue(vPosRangeTopY[0], vPosRangeTopY[1]);
+            // value.rotate = randomAngle();
+            imgsArrangeTopArr[index] = {
+                pos: {
+                    left: randomValue(vPosRangeX[0], vPosRangeX[1]),
+                    top: randomValue(vPosRangeTopY[0], vPosRangeTopY[1]),
+                },
+                rotate: randomAngle(),
+            };
             //alert("value "+value.left+", "+value.top);
         });
         //alert(imgsArrangeTopArr[0].left + ", " + imgsArrangeTopArr[0].top);
         //left & rightl
         //为剩余的坐标数组产生坐标
         imgsArrangeArr.forEach((value, index) => {
+            let hPosRangeTempX = null;
             //如果索引是奇数，放左边
             if (index % 2 === 1) {
-                value.pos.left = randomValue(hPosRangeLeftSecX[0], hPosRangeLeftSecX[1]);
+                // value.pos.left = randomValue(hPosRangeLeftSecX[0], hPosRangeLeftSecX[1]);
+                hPosRangeTempX = hPosRangeLeftSecX;
             } else {
-                value.pos.left = randomValue(hPosRangeRightSecX[0], hPosRangeRightSecX[1]);
+                // value.pos.left = randomValue(hPosRangeRightSecX[0], hPosRangeRightSecX[1]);
+                hPosRangeTempX = hPosRangeRightSecX;
             }
-            value.pos.top = randomValue(hPosRangeY[0], hPosRangeY[1]);
+            // value.pos.top = randomValue(hPosRangeY[0], hPosRangeY[1]);
+            imgsArrangeArr[index] = {
+                pos: {
+                    left: randomValue(hPosRangeTempX[0], hPosRangeTempX[1]),
+                    top: randomValue(hPosRangeY[0], hPosRangeY[1]),
+                },
+                rotate: randomAngle(),
+            };
         });
 
         //接下来把新的结果拼接回去
@@ -215,12 +244,18 @@ class CardOnlyMedia extends Component {
                     pos: {
                         left: 0,
                         top: 0
-                    }
+                    },
+                    rotate: 0,
+                    isInverse: false,
                 };
             }
             //在此处顺便传入对应索引的坐标信息，在组件的定义中，使用这个属性渲染坐标
             imgFigures.push(<ImageFigure key={index} data={value} ref={'imgFigure' + index}
-                                         position={this.state.imgsArrangeArr[index]}/>);
+                                         position={this.state.imgsArrangeArr[index]}
+                                         inverse={this.inverse(index)}
+                                         onClick={() => {
+                                             this.handleClick(index)
+                                         }}/>);
         }.bind(this));
 
         //构建新的组件，把心构建的ImageFigures数组填充进来
