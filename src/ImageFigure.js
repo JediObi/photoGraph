@@ -3,9 +3,11 @@ import './ImageFigure.css';
 
 class ImageFigure extends Component{
 
-    handleClick(){
-        this.props.inverse();
-    }
+    //处理点击事件
+    //当点击时调用属性中的inverse方法
+    //inverse会调用父组件的方法，父组件的方法会重新设置父组件中的状态值，然后重新渲染
+    //重新渲染就会执行render方法，在render中判断新的状态值，根据状态值管理class，给组件新的状态
+
 
     render(){
         let styleObj = {};
@@ -16,8 +18,11 @@ class ImageFigure extends Component{
         if(this.props.position.rotate) {
             styleObj['transform'] = 'rotate('+this.props.position.rotate+'deg)';
         }
+        //根据属性中isInverse的状态来添加翻转
+        let imgFigureClassName = 'img-figure';
+        imgFigureClassName += this.props.position.isInverse ? ' img-inverse':'';
         return(
-            <figure className="img-figure" style={styleObj} onClick={this.handleClick}>
+            <figure className={imgFigureClassName} style={styleObj} onClick={this.props.onClick}>
                 <img src={this.props.data.imageURL} alt={this.props.data.title}/>
                 <figcaption>
                     <h2 className="img-title">{this.props.data.title}</h2>
