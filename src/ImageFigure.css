@@ -42,6 +42,7 @@
     height: 100%;
     padding: 50px 40px;
     overflow: auto;
+    box-sizing: border-box;
 
     color: #a7a0a2;
     font-size: 22px;

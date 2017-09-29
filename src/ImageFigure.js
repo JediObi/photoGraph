@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import './ImageFigure.css';
 
+
 class ImageFigure extends Component{
 
     //处理点击事件
@@ -8,6 +9,9 @@ class ImageFigure extends Component{
     //inverse会调用父组件的方法，父组件的方法会重新设置父组件中的状态值，然后重新渲染
     //重新渲染就会执行render方法，在render中判断新的状态值，根据状态值管理class，给组件新的状态
 
+    handleClick(){
+        this.props.inverse();
+    }
 
     render(){
         let styleObj = {};
@@ -22,7 +26,7 @@ class ImageFigure extends Component{
         let imgFigureClassName = 'img-figure';
         imgFigureClassName += this.props.position.isInverse ? ' img-inverse':'';
         return(
-            <figure className={imgFigureClassName} style={styleObj} onClick={this.props.onClick}>
+            <figure className={imgFigureClassName} style={styleObj} onClick={this.onClick}>
                 <img src={this.props.data.imageURL} alt={this.props.data.title}/>
                 <figcaption>
                     <h2 className="img-title">{this.props.data.title}</h2>
