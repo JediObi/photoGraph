@@ -23,6 +23,7 @@
     text-align: center;
 }
 .img-inverse{
+    /* 先从原点位移，然后以原点旋转，*/
     transform: translate(320px) rotateY(180deg);
 }
 
@@ -42,6 +43,7 @@
     height: 100%;
     padding: 50px 40px;
     overflow: auto;
+    /* 使用border-box 固定盒子大小，padding 不会再增大box */
     box-sizing: border-box;
 
     color: #a7a0a2;

@@ -26,6 +26,10 @@ class ImageFigure extends Component{
         if(this.props.position.rotate) {
             styleObj['transform'] = 'rotate('+this.props.position.rotate+'deg)';
         }
+        //中心图片放到最上层
+        if(this.props.position.isCenter){
+            styleObj.zIndex = 11;
+        }
         //根据属性中isInverse的状态来添加翻转
         let imgFigureClassName = 'img-figure';
         imgFigureClassName += this.props.position.isInverse ? ' img-inverse':'';
