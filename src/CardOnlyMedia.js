@@ -79,15 +79,14 @@ class CardOnlyMedia extends Component {
     }
 
     handleClick(i) {
-        this.inverse(i);
+        //alert(i+" test");
     }
 
     //为指定图片设置旋转，并更新状态调用render
     inverse(i) {
-            const imgsArrangeArr = this.state.imgsArrangeArr;
-            alert(i + ' ' + imgsArrangeArr[i].isInverse);
-            imgsArrangeArr[i].isInverse = !imgsArrangeArr[i].isInverse;
-            this.setState({imgsArrangeArr: imgsArrangeArr});
+        const imgsArrangeArr = this.state.imgsArrangeArr;
+        imgsArrangeArr[i].isInverse = !imgsArrangeArr[i].isInverse;
+        this.setState({imgsArrangeArr: imgsArrangeArr});
     }
 
     //组件加载完后，计算组件在各版块的坐标范围
@@ -251,8 +250,7 @@ class CardOnlyMedia extends Component {
                 data={value}
                 ref={'imgFigure' + index}
                 position={this.state.imgsArrangeArr[index]}
-                inverse={()=>this.inverse(index)}
-                />);
+                inverse={() => this.inverse(index)}/>);
         }.bind(this));
 
         //构建新的组件，把心构建的ImageFigures数组填充进来
