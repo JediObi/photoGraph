@@ -10,7 +10,11 @@ class ImageFigure extends Component{
     //重新渲染就会执行render方法，在render中判断新的状态值，根据状态值管理class，给组件新的状态
 
     handleClick(){
-        this.props.inverse();
+        if(this.props.position.isCenter){
+            this.props.inverse();
+        }else{
+            this.props.center();
+        }
     }
 
     render(){

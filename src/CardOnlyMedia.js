@@ -71,15 +71,12 @@ class CardOnlyMedia extends Component {
                         top: 0
                     },
                     rotate: 0,//这个属性是图片随机倾斜角度，由于是添加再transform里的属性，所以影响了之后添加的transform属性，因此应当把边缘图片的点击旋转锁定。
-                    isInverse: false,
+                    isInverse: false,  //在子组件的render里会判断这个属性true则追加一个翻转的class
+                    isCenter: false,  //用这个属性判断居中，并用于锁定翻转功能
                 },
                 */
                 ]
         };
-    }
-
-    handleClick(i) {
-        //alert(i+" test");
     }
 
     //为指定图片设置旋转，并更新状态调用render
@@ -89,7 +86,9 @@ class CardOnlyMedia extends Component {
         this.setState({imgsArrangeArr: imgsArrangeArr});
     }
 
-    //组件加载完后，计算组件在各版块的坐标范围
+    // //把点击的图片放到中间，并重新排版其他图片 center(i) {     //
+    // 首先把指定居中图片的isCenter和isInverse置为false，把选中图片的isCenter置为true 但是此时并不知道哪张图片居中，所以由指定
+    //     reArrange(i); } 组件加载完后，计算组件在各版块的坐标范围
     componentDidMount() {
         //获取底面板
         let stageDOM = ReactDOM.findDOMNode(this.refs.stage);
@@ -137,6 +136,10 @@ class CardOnlyMedia extends Component {
 
     }
 
+    center(i) {
+        this.reArrange(i);
+    }
+
     //排布图片，首先为各个版块确定图片数量和坐标，然后填入图片索引 完全重排布，点选任何非中心图片，则展示到中心，并重新排布其他所有图片
     reArrange(centerIndex) {
         //获取this.state中的图片坐标数组，该数组中是每张图片的坐标
@@ -162,12 +165,14 @@ class CardOnlyMedia extends Component {
 
         imgsArrangeCenterArr[0] = {
             pos: centerPos,
-            rotate: 0
+            rotate: 0,
+            isCenter: true,
+            isTop: false
         }
 
         //top
         let imgsArrangeTopArr = [], //上部图片的位置信息
-            topImageNumber = Math.ceil(Math.random() * 2), //上部的图片数量，0或1
+            topImageNumber = Math.floor(Math.random() * 2), //上部的图片数量，0或1，随机值（0,2），去1法，只产生两个整数0,1
             topImgSpliceIndex = 0; //上部图片的索引
         // 判断top是否有图片，如果有，则计算坐标并随机取出一个图片填充 可以使用if，但是splice会剔除指定数量，剔除后，后续遍历不会重复出现
         // 首先确定随机种子的位置，然后从这个位置开始splice 因为产生的是索引所以，随机点必须合法，但如果数量为0就无所谓了
@@ -185,7 +190,9 @@ class CardOnlyMedia extends Component {
                     left: randomValue(vPosRangeX[0], vPosRangeX[1]),
                     top: randomValue(vPosRangeTopY[0], vPosRangeTopY[1])
                 },
-                rotate: randomAngle()
+                rotate: randomAngle(),
+                isCenter: false,
+                isTop: true
             };
             //alert("value "+value.left+", "+value.top);
         });
@@ -208,11 +215,13 @@ class CardOnlyMedia extends Component {
                     left: randomValue(hPosRangeTempX[0], hPosRangeTempX[1]),
                     top: randomValue(hPosRangeY[0], hPosRangeY[1])
                 },
-                rotate: randomAngle()
+                rotate: randomAngle(),
+                isCenter: false,
+                isTop: false
             };
         });
 
-        //接下来把新的结果拼接回去 top
+        //由于判断的问题导致可能缺少最后一张图片 接下来把新的结果拼接回去 top
         if (imgsArrangeTopArr && imgsArrangeTopArr[0]) {
             imgsArrangeArr.splice(topImgSpliceIndex, 0, imgsArrangeTopArr[0]);
         }
@@ -238,8 +247,7 @@ class CardOnlyMedia extends Component {
                         left: 0,
                         top: 0
                     },
-                    rotate: 0,
-                    isInverse: false
+                    rotate: 0
                 };
             }
 
@@ -250,6 +258,7 @@ class CardOnlyMedia extends Component {
                 data={value}
                 ref={'imgFigure' + index}
                 position={this.state.imgsArrangeArr[index]}
+                center={() => this.center(index)}
                 inverse={() => this.inverse(index)}/>);
         }.bind(this));
 
