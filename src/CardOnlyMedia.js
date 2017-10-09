@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import imageDatas from './imageDatas.json';
 import ImageFigure from './ImageFigure';
 import './CardOnlyMedia.css';
+import ControllerUnit from './ControllerUnit';
 
 //遍历json数组，把图片名拼装成url
 function genImageURL(imageDataArr) {
@@ -260,6 +261,13 @@ class CardOnlyMedia extends Component {
                 position={this.state.imgsArrangeArr[index]}
                 center={() => this.center(index)}
                 inverse={() => this.inverse(index)}/>);
+            controllerUnits.push(
+                <ControllerUnit
+                    key={index}
+                    position={this.state.imgsArrangeArr[index]}
+                    inverse={() => this.inverse(index)}
+                    center={() => this.center(index)}></ControllerUnit>
+            )
         }.bind(this));
 
         //构建新的组件，把心构建的ImageFigures数组填充进来
