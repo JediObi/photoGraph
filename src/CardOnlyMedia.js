@@ -222,7 +222,8 @@ class CardOnlyMedia extends Component {
             };
         });
 
-        //由于判断的问题导致可能缺少最后一张图片 接下来把新的结果拼接回去 top
+        //之前缺少最后一张图片的bug，是由于产生top图片数量的时候使用了ceil天花板函数，导致0~2最大为2，应该改用floor函数，最大取1
+        // 接下来把新的结果拼接回去 top
         if (imgsArrangeTopArr && imgsArrangeTopArr[0]) {
             imgsArrangeArr.splice(topImgSpliceIndex, 0, imgsArrangeTopArr[0]);
         }
