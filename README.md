@@ -1,4 +1,4 @@
-To see <a href="https://mintprc.github.io/photoGraph/" target="_blank">project website</a>.<br/>
+To see [project website](https://mintprc.github.io/photoGraph/).<br/>
 <br/>
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
