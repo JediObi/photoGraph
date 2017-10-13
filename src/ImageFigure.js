@@ -38,12 +38,13 @@ class ImageFigure extends Component{
                 <img src={this.props.data.imageURL} alt={this.props.data.title}/>
                 <figcaption>
                     <h2 className="img-title">{this.props.data.title}</h2>
-                    <div className="img-back">
-                        <p>
-                            {this.props.data.desc}
-                        </p>
-                    </div>
+                    
                 </figcaption>
+                <div className="img-back">
+                <p>
+                    {this.props.data.desc}
+                </p>
+            </div>
             </figure>
         );
     }

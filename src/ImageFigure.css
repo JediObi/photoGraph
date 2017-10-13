@@ -1,3 +1,4 @@
+/* 使用这个类作为舞台 */
 .img-figure{
     position: absolute;
 
@@ -11,6 +12,7 @@
     cursor: pointer;
 
     transform-style: preserve-3d;
+
     transform-origin: 0 50% 0;
     transition: left 0.6s ease-in-out, top 0.6s ease-in-out, transform 0.6s ease-in-out;
 
@@ -22,15 +24,37 @@
 .img-figure figcaption {
     text-align: center;
 }
+
 .img-inverse{
     /* 先从原点位移，然后以原点旋转，*/
     transform: translate(320px) rotateY(180deg);
 }
-
 .img-title{
     margin: 20px 0 0 0;
     color: #a7a0a2;
     font-size: 16px;
+    backface-visibility: hidden;
+}
+
+.desc-stage{
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+    padding: 50px 40px;
+    /* 使用border-box 固定盒子大小，padding 不会再增大box */
+    box-sizing: border-box;
+
+    color: #a7a0a2;
+    font-size: 22px;
+    line-height: 1.25;
+    text-align: left;
+    transform:rotateY(180deg);
+
+
+    background-color: #fff;
 }
 
 .img-back{
@@ -42,7 +66,6 @@
     width: 100%;
     height: 100%;
     padding: 50px 40px;
-    overflow: auto;
     /* 使用border-box 固定盒子大小，padding 不会再增大box */
     box-sizing: border-box;
 
@@ -52,18 +75,24 @@
     text-align: left;
 
     background-color: #fff;
+    transform-style: preserve-3d;
 
-    -webkit-transform: rotate(180deg) translateZ(1px);
-    -moz-transform: rotate(180deg) translateZ(1px);
-    -ms-transform: rotate(180deg) translateZ(1px);
-    -o-transform: rotate(180deg) translateZ(1px);
-    transform: rotateY(180deg) translateZ(1px);
-
+    -webkit-transform: rotateY(180deg) ;
+    -moz-transform: rotateY(180deg) ;
+    -ms-transform: rotateY(180deg) ;
+    -o-transform: rotateY(180deg) ;
+    transform: rotateY(180deg) ;
 
     -webkit-backface-visibility: hidden;
     -moz-backface-visibility: hidden;
     -ms-backface-visibility: hidden;
     backface-visibility: hidden;
 
-
 }
+
+.img-back p{
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+}
+
+
